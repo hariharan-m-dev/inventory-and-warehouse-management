@@ -54,11 +54,12 @@ SELECT product_id, warehouse_id, 'IN', quantity,
 FROM inventory WHERE quantity > 0;
 
 -- One sample PO so the supplier role has something to dispatch
-INSERT INTO purchase_orders (supplier_id, warehouse_id, product_id, quantity, created_by)
+INSERT INTO purchase_orders (supplier_id, warehouse_id, product_id, quantity, unit_price, created_by)
 VALUES (
   (SELECT id FROM suppliers  WHERE name='ABC Traders'),
   (SELECT id FROM warehouses WHERE name='Coimbatore Hub'),
   (SELECT id FROM products   WHERE sku='ELE-002'),
   50,
+  750.00,
   (SELECT id FROM users WHERE email='ravi@inv.com')
 );

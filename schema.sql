@@ -72,6 +72,7 @@ CREATE TABLE purchase_orders (
     warehouse_id  INT NOT NULL REFERENCES warehouses(id),
     product_id    INT NOT NULL REFERENCES products(id),
     quantity      INT NOT NULL CHECK (quantity > 0),
+    unit_price    NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
     status        VARCHAR(20) NOT NULL DEFAULT 'Created'
                   CHECK (status IN ('Created','Dispatched','Received','Cancelled')),
     created_by    INT NOT NULL REFERENCES users(id),
