@@ -268,8 +268,8 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="panel-title-group">
-                  <span class="panel-title">Low Stock Critical Watchlist</span>
-                  <span class="panel-badge" style="background: var(--warning-subtle); color: var(--warning-text); border-color: var(--warning-border);">Alerts</span>
+                  <span class="panel-title" id="dash-left-title">Low Stock Critical Watchlist</span>
+                  <span class="panel-badge" id="dash-left-badge" style="background: var(--warning-subtle); color: var(--warning-text); border-color: var(--warning-border);">Alerts</span>
                 </div>
               </div>
               <div class="table-responsive">
@@ -380,70 +380,110 @@
         </section>
 
         <!-- ====================================================
-             VIEW 3: STOCK OPERATIONS PANEL
+             VIEW 3: STOCK OPERATIONS SUITE (DIRECT CONSOLES)
              ==================================================== -->
         <section class="view-section" id="view-operations">
           <div class="operations-canvas">
             
-            <!-- Stock IN Card -->
+            <!-- Direct Stock IN Console -->
             <div class="op-card">
               <div class="op-card-header">
                 <div class="op-card-icon in">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
                 </div>
                 <div>
-                  <div class="op-card-title">Stock IN</div>
-                  <div class="op-card-desc">Add physical units into warehouse inventory</div>
+                  <div class="op-card-title">Stock IN Console</div>
+                  <div class="op-card-desc">Receive physical inventory into warehouse</div>
                 </div>
               </div>
 
-              <form id="form-op-direct-in" onsubmit="event.preventDefault(); window.NEXUS.openQuickStockIn($('#op-in-product').value, $('#op-in-warehouse').value);">
-                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+              <form id="form-console-stock-in">
+                <div style="display:flex; flex-direction:column; gap:0.85rem;">
                   <div class="form-group">
-                    <label class="form-label">Warehouse Facility</label>
-                    <select class="form-control" id="op-in-warehouse" required></select>
+                    <label class="form-label">Destination Facility <span class="req">*</span></label>
+                    <select class="form-control" id="console-in-warehouse" required></select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Product Item</label>
-                    <select class="form-control" id="op-in-product" required></select>
+                    <label class="form-label">Product Item <span class="req">*</span></label>
+                    <select class="form-control" id="console-in-product" required></select>
                   </div>
-                  <button type="submit" class="btn btn-success" style="margin-top: 0.5rem;">
-                    Launch Stock IN Flow &rarr;
+                  <div class="preview-box" id="console-in-stock-badge" style="display: none;">
+                    <div class="preview-row">
+                      <span class="preview-label">Current Available:</span>
+                      <span class="preview-value tabular" id="console-in-current-qty">0 units</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Quantity to Add <span class="req">*</span></label>
+                    <input type="number" class="form-control tabular" id="console-in-qty" min="1" placeholder="e.g. 50" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Audit Reason / Note</label>
+                    <input type="text" class="form-control" id="console-in-note" placeholder="e.g. Supplier shipment received">
+                  </div>
+                  <div class="preview-box" id="console-in-preview" style="display: none;">
+                    <div class="preview-row">
+                      <span class="preview-label">Projected Stock Level:</span>
+                      <span class="preview-value tabular" style="color: var(--success-text);" id="console-in-projected">0 units</span>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-success" style="margin-top: 0.25rem;">
+                    Execute Stock IN
                   </button>
                 </div>
               </form>
             </div>
 
-            <!-- Stock OUT Card -->
+            <!-- Direct Stock OUT Console -->
             <div class="op-card">
               <div class="op-card-header">
                 <div class="op-card-icon out">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
                 </div>
                 <div>
-                  <div class="op-card-title">Stock OUT</div>
-                  <div class="op-card-desc">Deduct units for sales dispatch or adjustments</div>
+                  <div class="op-card-title">Stock OUT Console</div>
+                  <div class="op-card-desc">Deduct stock for sales orders or shipments</div>
                 </div>
               </div>
 
-              <form id="form-op-direct-out" onsubmit="event.preventDefault(); window.NEXUS.openQuickStockOut($('#op-out-product').value, $('#op-out-warehouse').value);">
-                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+              <form id="form-console-stock-out">
+                <div style="display:flex; flex-direction:column; gap:0.85rem;">
                   <div class="form-group">
-                    <label class="form-label">Warehouse Facility</label>
-                    <select class="form-control" id="op-out-warehouse" required></select>
+                    <label class="form-label">Source Facility <span class="req">*</span></label>
+                    <select class="form-control" id="console-out-warehouse" required></select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Product Item</label>
-                    <select class="form-control" id="op-out-product" required></select>
+                    <label class="form-label">Product Item <span class="req">*</span></label>
+                    <select class="form-control" id="console-out-product" required></select>
                   </div>
-                  <button type="submit" class="btn btn-danger" style="margin-top: 0.5rem;">
-                    Launch Stock OUT Flow &rarr;
+                  <div class="preview-box" id="console-out-stock-badge" style="display: none;">
+                    <div class="preview-row">
+                      <span class="preview-label">Current Available:</span>
+                      <span class="preview-value tabular" id="console-out-current-qty">0 units</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Quantity to Deduct <span class="req">*</span></label>
+                    <input type="number" class="form-control tabular" id="console-out-qty" min="1" placeholder="e.g. 10" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Dispatch Reference / Reason</label>
+                    <input type="text" class="form-control" id="console-out-note" placeholder="e.g. Sales order dispatch">
+                  </div>
+                  <div class="preview-box" id="console-out-preview" style="display: none;">
+                    <div class="preview-row">
+                      <span class="preview-label">Projected Remaining:</span>
+                      <span class="preview-value tabular" id="console-out-projected">0 units</span>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-danger" style="margin-top: 0.25rem;">
+                    Execute Stock OUT
                   </button>
                 </div>
               </form>
             </div>
 
-            <!-- Transfer Card -->
+            <!-- Direct Inter-Warehouse Transfer Console -->
             <div class="op-card">
               <div class="op-card-header">
                 <div class="op-card-icon transfer">
@@ -451,22 +491,42 @@
                 </div>
                 <div>
                   <div class="op-card-title">Inter-Warehouse Transfer</div>
-                  <div class="op-card-desc">Atomic movement between two storage facilities</div>
+                  <div class="op-card-desc">Atomic relocation between two facilities</div>
                 </div>
               </div>
 
-              <form id="form-op-direct-tr" onsubmit="event.preventDefault(); window.NEXUS.openQuickTransfer($('#op-tr-product').value, $('#op-tr-from-wh').value);">
-                <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                  <div class="form-group">
-                    <label class="form-label">Source Warehouse</label>
-                    <select class="form-control" id="op-tr-from-wh" required></select>
+              <form id="form-console-transfer">
+                <div style="display:flex; flex-direction:column; gap:0.85rem;">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">From Facility <span class="req">*</span></label>
+                      <select class="form-control" id="console-tr-from-wh" required></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">To Facility <span class="req">*</span></label>
+                      <select class="form-control" id="console-tr-to-wh" required></select>
+                    </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Product Item</label>
-                    <select class="form-control" id="op-tr-product" required></select>
+                    <label class="form-label">Product to Relocate <span class="req">*</span></label>
+                    <select class="form-control" id="console-tr-product" required></select>
                   </div>
-                  <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
-                    Launch Transfer Wizard &rarr;
+                  <div class="preview-box" id="console-tr-stock-badge" style="display: none;">
+                    <div class="preview-row">
+                      <span class="preview-label">Available at Source:</span>
+                      <span class="preview-value tabular" id="console-tr-current-qty">0 units</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Quantity to Transfer <span class="req">*</span></label>
+                    <input type="number" class="form-control tabular" id="console-tr-qty" min="1" placeholder="e.g. 15" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Logistics Note</label>
+                    <input type="text" class="form-control" id="console-tr-note" placeholder="e.g. Regional inventory balance">
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 0.25rem;">
+                    Execute Transfer
                   </button>
                 </div>
               </form>
@@ -698,12 +758,18 @@
         <form id="form-stock-in">
           <div class="modal-body">
             <div class="form-group">
-              <label class="form-label">Destination Warehouse <span class="req">*</span></label>
+              <label class="form-label">Destination Facility <span class="req">*</span></label>
               <select class="form-control" id="modal-in-warehouse" required></select>
             </div>
             <div class="form-group">
               <label class="form-label">Product Item <span class="req">*</span></label>
               <select class="form-control" id="modal-in-product" required></select>
+            </div>
+            <div class="preview-box" id="modal-in-stock-badge" style="display: none;">
+              <div class="preview-row">
+                <span class="preview-label">Current Available:</span>
+                <span class="preview-value tabular" id="modal-in-current-qty">0 units</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Units to Add <span class="req">*</span></label>
@@ -712,6 +778,12 @@
             <div class="form-group">
               <label class="form-label">Audit Note / PO Reference</label>
               <input type="text" class="form-control" id="modal-in-note" placeholder="e.g. Supplier replenishment">
+            </div>
+            <div class="preview-box" id="modal-in-preview" style="display: none;">
+              <div class="preview-row">
+                <span class="preview-label">Projected Stock Level:</span>
+                <span class="preview-value tabular" style="color: var(--success-text);" id="modal-in-projected">0 units</span>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -735,12 +807,18 @@
         <form id="form-stock-out">
           <div class="modal-body">
             <div class="form-group">
-              <label class="form-label">Source Warehouse <span class="req">*</span></label>
+              <label class="form-label">Source Facility <span class="req">*</span></label>
               <select class="form-control" id="modal-out-warehouse" required></select>
             </div>
             <div class="form-group">
               <label class="form-label">Product Item <span class="req">*</span></label>
               <select class="form-control" id="modal-out-product" required></select>
+            </div>
+            <div class="preview-box" id="modal-out-stock-badge" style="display: none;">
+              <div class="preview-row">
+                <span class="preview-label">Current Available:</span>
+                <span class="preview-value tabular" id="modal-out-current-qty">0 units</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Units to Deduct <span class="req">*</span></label>
@@ -749,6 +827,12 @@
             <div class="form-group">
               <label class="form-label">Reason / Sales Order Reference</label>
               <input type="text" class="form-control" id="modal-out-note" placeholder="e.g. Dispatched to client">
+            </div>
+            <div class="preview-box" id="modal-out-preview" style="display: none;">
+              <div class="preview-row">
+                <span class="preview-label">Projected Remaining:</span>
+                <span class="preview-value tabular" id="modal-out-projected">0 units</span>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -773,17 +857,23 @@
           <div class="modal-body">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Source Warehouse <span class="req">*</span></label>
+                <label class="form-label">Source Facility <span class="req">*</span></label>
                 <select class="form-control" id="modal-tr-from-wh" required></select>
               </div>
               <div class="form-group">
-                <label class="form-label">Destination Warehouse <span class="req">*</span></label>
+                <label class="form-label">Destination Facility <span class="req">*</span></label>
                 <select class="form-control" id="modal-tr-to-wh" required></select>
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Product to Relocate <span class="req">*</span></label>
               <select class="form-control" id="modal-tr-product" required></select>
+            </div>
+            <div class="preview-box" id="modal-tr-stock-badge" style="display: none;">
+              <div class="preview-row">
+                <span class="preview-label">Available at Source:</span>
+                <span class="preview-value tabular" id="modal-tr-current-qty">0 units</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Quantity to Transfer <span class="req">*</span></label>
@@ -819,11 +909,11 @@
               <select class="form-control" id="modal-po-supplier" required></select>
             </div>
             <div class="form-group">
-              <label class="form-label">Receiving Warehouse <span class="req">*</span></label>
+              <label class="form-label">Receiving Facility <span class="req">*</span></label>
               <select class="form-control" id="modal-po-warehouse" required></select>
             </div>
             <div class="form-group">
-              <label class="form-label">Product SKU <span class="req">*</span></label>
+              <label class="form-label">Product Item <span class="req">*</span></label>
               <select class="form-control" id="modal-po-product" required></select>
             </div>
             <div class="form-row">
@@ -834,6 +924,12 @@
               <div class="form-group">
                 <label class="form-label">Unit Price (₹) <span class="req">*</span></label>
                 <input type="number" step="0.01" class="form-control tabular" id="modal-po-price" min="0" value="500" required>
+              </div>
+            </div>
+            <div class="preview-box">
+              <div class="preview-row">
+                <span class="preview-label">Estimated Total Order Cost:</span>
+                <span class="preview-value tabular" style="color: var(--primary); font-size: 0.95rem;" id="modal-po-total-display">₹25,000.00</span>
               </div>
             </div>
           </div>
@@ -871,11 +967,11 @@
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Price (₹) <span class="req">*</span></label>
+                <label class="form-label">Unit Price (₹) <span class="req">*</span></label>
                 <input type="number" step="0.01" class="form-control tabular" id="modal-product-price" min="0" placeholder="e.g. 1299" required>
               </div>
               <div class="form-group">
-                <label class="form-label">Min Stock Threshold</label>
+                <label class="form-label">Safety Stock Minimum</label>
                 <input type="number" class="form-control tabular" id="modal-product-min-stock" min="0" value="10">
               </div>
             </div>
@@ -919,11 +1015,11 @@
               </select>
             </div>
             <div class="form-group" id="modal-user-warehouse-wrap">
-              <label class="form-label">Assigned Warehouse (Manager / Staff)</label>
+              <label class="form-label">Assigned Facility <span class="req">*</span></label>
               <select class="form-control" id="modal-user-warehouse"></select>
             </div>
-            <div class="form-group" id="modal-user-supplier-wrap">
-              <label class="form-label">Assigned Supplier (Supplier Role)</label>
+            <div class="form-group" id="modal-user-supplier-wrap" style="display:none;">
+              <label class="form-label">Assigned Supplier Company <span class="req">*</span></label>
               <select class="form-control" id="modal-user-supplier"></select>
             </div>
           </div>
