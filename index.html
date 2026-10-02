@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS WMS — Enterprise Inventory & Warehouse Management</title>
+  <meta name="description" content="Professional, high-performance warehouse management and inventory control system with role-based access, atomic transfers, and procurement workflows.">
+  
+  <!-- Modern Typography (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+  <div id="app">
+    
+    <!-- ========================================================
+         SIDEBAR NAVIGATION
+         ======================================================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">NEXUS WMS</div>
+          <div class="brand-badge">Enterprise Edition</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Operations Section -->
+        <div>
+          <div class="nav-section-title">Operations</div>
+          <ul class="nav-list">
+            <li>
+              <a href="#dashboard" class="nav-link active" data-view="dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="#stock" class="nav-link" data-view="stock">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                <span>Stock Inventory</span>
+                <span class="nav-counter alert" id="sidebar-low-stock-count" style="display: none;">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#operations" class="nav-link" data-view="operations">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                <span>Stock Operations</span>
+              </a>
+            </li>
+            <li>
+              <a href="#movements" class="nav-link" data-view="movements">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Audit Movements</span>
+              </a>
+            </li>
+            <li>
+              <a href="#purchase-orders" class="nav-link" data-view="purchase-orders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Purchase Orders</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Master Data Section -->
+        <div>
+          <div class="nav-section-title" id="nav-title-master">Master Data</div>
+          <ul class="nav-list">
+            <li>
+              <a href="#products" class="nav-link" data-view="products">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <span>Product Catalog</span>
+              </a>
+            </li>
+            <li>
+              <a href="#warehouses" class="nav-link" data-view="warehouses">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-3"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="9" y1="13" x2="9" y2="13.01"/><line x1="9" y1="17" x2="9" y2="17.01"/></svg>
+                <span>Warehouses</span>
+              </a>
+            </li>
+            <li>
+              <a href="#suppliers" class="nav-link" data-view="suppliers">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Suppliers</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Administration Section -->
+        <div>
+          <div class="nav-section-title" id="nav-title-admin">Administration</div>
+          <ul class="nav-list">
+            <li>
+              <a href="#users" class="nav-link" data-view="users">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                <span>User Management</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <span class="status-dot" id="server-status-dot"></span>
+          <span id="server-status-label">Checking Server...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========================================================
+         MAIN CONTENT WRAPPER
+         ======================================================== -->
+    <div class="main-wrapper">
+      
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle" id="btn-mobile-toggle" aria-label="Toggle menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="page-title-box">
+            <h1 class="page-title" id="page-title">Operations Dashboard</h1>
+            <p class="page-subtitle" id="page-subtitle">Real-time warehouse KPIs and inventory overview</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Role Quick Switcher for instant evaluation/testing -->
+          <div class="role-switcher-box" title="Switch active role context for testing">
+            <span class="role-switcher-label">Role:</span>
+            <select class="role-select" id="header-role-select">
+              <option value="admin">Admin (Full Control)</option>
+              <option value="ravi">Ravi (Coimbatore Mgr)</option>
+              <option value="priya">Priya (Coimbatore Staff)</option>
+              <option value="karthik">Karthik (Chennai Mgr)</option>
+              <option value="supplier">ABC Supplier (Vendor)</option>
+            </select>
+          </div>
+
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="btn-theme-toggle" aria-label="Toggle dark/light theme" title="Toggle theme"></button>
+
+          <!-- User Profile Chip -->
+          <div class="user-profile-chip" id="user-profile-chip">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+            <button class="btn-logout" id="btn-logout" title="Sign out">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+          </div>
+
+          <button class="btn btn-primary btn-sm" id="btn-header-login" style="display:none;" onclick="window.NEXUS.openLoginModal()">
+            Sign In
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Content Area -->
+      <main class="content-area">
+        
+        <!-- Role Scope Notice Banner (Shows warehouse or supplier association) -->
+        <div class="banner info" id="role-scope-banner" style="display: none;">
+          <div class="banner-content">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span class="banner-text">Operating under role scope.</span>
+          </div>
+        </div>
+
+        <!-- ====================================================
+             VIEW 1: DASHBOARD
+             ==================================================== -->
+        <section class="view-section active" id="view-dashboard">
+          <!-- Metrics Row -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Master SKUs</span>
+                <div class="metric-icon-box primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>
+                </div>
+              </div>
+              <div class="metric-value tabular" id="kpi-total-skus">—</div>
+              <div class="metric-sub">Active registered catalog items</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Units On Hand</span>
+                <div class="metric-icon-box success">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+              </div>
+              <div class="metric-value tabular" id="kpi-total-units">—</div>
+              <div class="metric-sub">Total physical inventory in warehouses</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Low Stock Alerts</span>
+                <div class="metric-icon-box warning">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+              </div>
+              <div class="metric-value tabular" id="kpi-low-stock" style="color: var(--warning-text);">—</div>
+              <div class="metric-sub">Items below safety reorder threshold</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Active POs</span>
+                <div class="metric-icon-box primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+              </div>
+              <div class="metric-value tabular" id="kpi-active-pos">—</div>
+              <div class="metric-sub">Orders Created or Dispatched</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Bar -->
+          <div class="panel" style="padding: 1rem 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+              <div>
+                <strong style="font-size: 0.95rem;">Quick Operational Actions</strong>
+                <div class="form-hint">Fast entry shortcuts for daily warehouse floor operations</div>
+              </div>
+              <div class="panel-actions">
+                <button class="btn btn-secondary" onclick="window.NEXUS.openQuickStockIn('', '')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Stock IN
+                </button>
+                <button class="btn btn-secondary" onclick="window.NEXUS.openQuickStockOut('', '')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Stock OUT
+                </button>
+                <button class="btn btn-secondary" onclick="window.NEXUS.openQuickTransfer('', '')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  Transfer
+                </button>
+                <button class="btn btn-primary" onclick="window.NEXUS.openNewPOModal()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  New Purchase Order
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two-column dashboard widgets -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.5rem;">
+            <!-- Low stock alert list -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-title">Low Stock Critical Watchlist</span>
+                  <span class="panel-badge" style="background: var(--warning-subtle); color: var(--warning-text); border-color: var(--warning-border);">Alerts</span>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>SKU</th>
+                      <th>Product</th>
+                      <th>Warehouse</th>
+                      <th>Level / Min</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-low-stock-tbody">
+                    <tr><td colspan="5" class="empty-state">Checking stock levels...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Recent Movements list -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-title">Recent Inventory Activity</span>
+                  <span class="panel-badge">Audit Log</span>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Type</th>
+                      <th>Product</th>
+                      <th>Warehouse</th>
+                      <th>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-recent-movements-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading audit movements...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 2: STOCK INVENTORY TABLE
+             ==================================================== -->
+        <section class="view-section" id="view-stock">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Current Warehouse Inventory</span>
+                <span class="panel-badge" id="stock-items-count">0 records</span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.NEXUS.openQuickStockIn('', '')">
+                  + Stock IN
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.NEXUS.openQuickTransfer('', '')">
+                  ⇄ Inter-Warehouse Transfer
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter and search bar -->
+            <div class="filter-bar">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="search-stock" placeholder="Filter by product name, SKU, warehouse...">
+              </div>
+
+              <div class="filter-group">
+                <select class="filter-select" id="filter-stock-warehouse">
+                  <option value="">All Warehouses</option>
+                </select>
+
+                <button class="toggle-chip" id="filter-low-stock-toggle">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>Low Stock Only</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Product Name</th>
+                    <th>Warehouse</th>
+                    <th>Current Quantity</th>
+                    <th>Safety Min</th>
+                    <th>Inventory Status</th>
+                    <th>Quick Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-table-tbody">
+                  <tr><td colspan="7" class="empty-state">Loading stock records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 3: STOCK OPERATIONS PANEL
+             ==================================================== -->
+        <section class="view-section" id="view-operations">
+          <div class="operations-canvas">
+            
+            <!-- Stock IN Card -->
+            <div class="op-card">
+              <div class="op-card-header">
+                <div class="op-card-icon in">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+                </div>
+                <div>
+                  <div class="op-card-title">Stock IN</div>
+                  <div class="op-card-desc">Add physical units into warehouse inventory</div>
+                </div>
+              </div>
+
+              <form id="form-op-direct-in" onsubmit="event.preventDefault(); window.NEXUS.openQuickStockIn($('#op-in-product').value, $('#op-in-warehouse').value);">
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label">Warehouse Facility</label>
+                    <select class="form-control" id="op-in-warehouse" required></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Product Item</label>
+                    <select class="form-control" id="op-in-product" required></select>
+                  </div>
+                  <button type="submit" class="btn btn-success" style="margin-top: 0.5rem;">
+                    Launch Stock IN Flow &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Stock OUT Card -->
+            <div class="op-card">
+              <div class="op-card-header">
+                <div class="op-card-icon out">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+                </div>
+                <div>
+                  <div class="op-card-title">Stock OUT</div>
+                  <div class="op-card-desc">Deduct units for sales dispatch or adjustments</div>
+                </div>
+              </div>
+
+              <form id="form-op-direct-out" onsubmit="event.preventDefault(); window.NEXUS.openQuickStockOut($('#op-out-product').value, $('#op-out-warehouse').value);">
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label">Warehouse Facility</label>
+                    <select class="form-control" id="op-out-warehouse" required></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Product Item</label>
+                    <select class="form-control" id="op-out-product" required></select>
+                  </div>
+                  <button type="submit" class="btn btn-danger" style="margin-top: 0.5rem;">
+                    Launch Stock OUT Flow &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Transfer Card -->
+            <div class="op-card">
+              <div class="op-card-header">
+                <div class="op-card-icon transfer">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </div>
+                <div>
+                  <div class="op-card-title">Inter-Warehouse Transfer</div>
+                  <div class="op-card-desc">Atomic movement between two storage facilities</div>
+                </div>
+              </div>
+
+              <form id="form-op-direct-tr" onsubmit="event.preventDefault(); window.NEXUS.openQuickTransfer($('#op-tr-product').value, $('#op-tr-from-wh').value);">
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label">Source Warehouse</label>
+                    <select class="form-control" id="op-tr-from-wh" required></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Product Item</label>
+                    <select class="form-control" id="op-tr-product" required></select>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                    Launch Transfer Wizard &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 4: STOCK MOVEMENTS AUDIT TRAIL
+             ==================================================== -->
+        <section class="view-section" id="view-movements">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Audit Trail & Movement History</span>
+                <span class="panel-badge">Append-Only Log</span>
+              </div>
+
+              <div class="panel-actions">
+                <select class="filter-select" id="filter-movement-type">
+                  <option value="ALL">All Movement Types</option>
+                  <option value="IN">STOCK IN</option>
+                  <option value="OUT">STOCK OUT</option>
+                  <option value="TRANSFER_IN">TRANSFER IN</option>
+                  <option value="TRANSFER_OUT">TRANSFER OUT</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Audit ID</th>
+                    <th>Date & Time</th>
+                    <th>Type</th>
+                    <th>Product & SKU</th>
+                    <th>Warehouse</th>
+                    <th>Quantity Change</th>
+                    <th>Authorized By / Reference</th>
+                  </tr>
+                </thead>
+                <tbody id="movements-table-tbody">
+                  <tr><td colspan="7" class="empty-state">Loading audit history...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 5: PURCHASE ORDERS
+             ==================================================== -->
+        <section class="view-section" id="view-purchase-orders">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Procurement & Purchase Orders</span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.NEXUS.openNewPOModal()">
+                  + Create Purchase Order
+                </button>
+              </div>
+            </div>
+
+            <!-- Status filter tabs -->
+            <div class="filter-bar">
+              <div class="filter-group">
+                <button class="btn btn-sm btn-primary po-filter-btn" data-status="ALL">All Orders</button>
+                <button class="btn btn-sm btn-secondary po-filter-btn" data-status="Created">Created</button>
+                <button class="btn btn-sm btn-secondary po-filter-btn" data-status="Dispatched">Dispatched</button>
+                <button class="btn btn-sm btn-secondary po-filter-btn" data-status="Received">Received</button>
+                <button class="btn btn-sm btn-secondary po-filter-btn" data-status="Cancelled">Cancelled</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>PO #</th>
+                    <th>Supplier Vendor</th>
+                    <th>Target Warehouse</th>
+                    <th>Item & SKU</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Value</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="po-table-tbody">
+                  <tr><td colspan="9" class="empty-state">Loading purchase orders...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 6: PRODUCTS CATALOG
+             ==================================================== -->
+        <section class="view-section" id="view-products">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Master Product Catalog</span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.NEXUS.openNewProductModal()">
+                  + Add Product SKU
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>SKU Code</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Unit Price</th>
+                    <th>Safety Minimum</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-tbody">
+                  <tr><td colspan="7" class="empty-state">Loading master products...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 7: WAREHOUSES
+             ==================================================== -->
+        <section class="view-section" id="view-warehouses">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Warehouse Facilities & Godowns</span>
+              </div>
+            </div>
+            <div style="padding: 1.5rem;">
+              <div class="metrics-grid" id="warehouses-cards-grid">
+                <!-- Warehouses rendered here -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 8: SUPPLIERS
+             ==================================================== -->
+        <section class="view-section" id="view-suppliers">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">Suppliers & Trade Vendors</span>
+              </div>
+            </div>
+            <div style="padding: 1.5rem;">
+              <div class="metrics-grid" id="suppliers-cards-grid">
+                <!-- Suppliers rendered here -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================
+             VIEW 9: USER MANAGEMENT
+             ==================================================== -->
+        <section class="view-section" id="view-users">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-title">System Users & Role Allocations</span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.NEXUS.openNewUserModal()">
+                  + Create User Account
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email Address</th>
+                    <th>Assigned Role</th>
+                    <th>Facility / Supplier Scope</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-tbody">
+                  <tr><td colspan="7" class="empty-state">Loading user records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ========================================================
+         MODALS & DIALOGS
+         ======================================================== -->
+
+    <!-- 1. Stock IN Modal -->
+    <div class="modal-backdrop" id="modal-stock-in">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+            <span>Stock IN — Receive Goods</span>
+          </div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-stock-in">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Destination Warehouse <span class="req">*</span></label>
+              <select class="form-control" id="modal-in-warehouse" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Item <span class="req">*</span></label>
+              <select class="form-control" id="modal-in-product" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Units to Add <span class="req">*</span></label>
+              <input type="number" class="form-control tabular" id="modal-in-qty" min="1" placeholder="e.g. 50" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Audit Note / PO Reference</label>
+              <input type="text" class="form-control" id="modal-in-note" placeholder="e.g. Supplier replenishment">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-stock-in').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-success">Confirm Stock IN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2. Stock OUT Modal -->
+    <div class="modal-backdrop" id="modal-stock-out">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+            <span>Stock OUT — Deduct Inventory</span>
+          </div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-stock-out">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Source Warehouse <span class="req">*</span></label>
+              <select class="form-control" id="modal-out-warehouse" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Item <span class="req">*</span></label>
+              <select class="form-control" id="modal-out-product" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Units to Deduct <span class="req">*</span></label>
+              <input type="number" class="form-control tabular" id="modal-out-qty" min="1" placeholder="e.g. 10" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reason / Sales Order Reference</label>
+              <input type="text" class="form-control" id="modal-out-note" placeholder="e.g. Dispatched to client">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-stock-out').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-danger">Confirm Stock OUT</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. Warehouse Transfer Modal -->
+    <div class="modal-backdrop" id="modal-transfer">
+      <div class="modal-dialog wide">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            <span>Inter-Warehouse Transfer (Atomic Transaction)</span>
+          </div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-transfer">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Source Warehouse <span class="req">*</span></label>
+                <select class="form-control" id="modal-tr-from-wh" required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Destination Warehouse <span class="req">*</span></label>
+                <select class="form-control" id="modal-tr-to-wh" required></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product to Relocate <span class="req">*</span></label>
+              <select class="form-control" id="modal-tr-product" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quantity to Transfer <span class="req">*</span></label>
+              <input type="number" class="form-control tabular" id="modal-tr-qty" min="1" placeholder="e.g. 15" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Transfer Purpose / Logistics Note</label>
+              <input type="text" class="form-control" id="modal-tr-note" placeholder="e.g. Regional inventory balance">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-transfer').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Execute Atomic Transfer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 4. Create Purchase Order Modal -->
+    <div class="modal-backdrop" id="modal-create-po">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Create Supplier Purchase Order</span>
+          </div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-create-po">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Supplier Vendor <span class="req">*</span></label>
+              <select class="form-control" id="modal-po-supplier" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Receiving Warehouse <span class="req">*</span></label>
+              <select class="form-control" id="modal-po-warehouse" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product SKU <span class="req">*</span></label>
+              <select class="form-control" id="modal-po-product" required></select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Order Quantity <span class="req">*</span></label>
+                <input type="number" class="form-control tabular" id="modal-po-qty" min="1" value="50" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Unit Price (₹) <span class="req">*</span></label>
+                <input type="number" step="0.01" class="form-control tabular" id="modal-po-price" min="0" value="500" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-create-po').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Purchase Order</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 5. Add / Edit Product Modal -->
+    <div class="modal-backdrop" id="modal-product">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title" id="modal-product-title">Add Master Product SKU</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-product">
+          <input type="hidden" id="modal-product-id">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">SKU Code <span class="req">*</span></label>
+                <input type="text" class="form-control" id="modal-product-sku" placeholder="e.g. ELE-004" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <select class="form-control" id="modal-product-category"></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Name <span class="req">*</span></label>
+              <input type="text" class="form-control" id="modal-product-name" placeholder="e.g. Mechanical Keyboard" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Price (₹) <span class="req">*</span></label>
+                <input type="number" step="0.01" class="form-control tabular" id="modal-product-price" min="0" placeholder="e.g. 1299" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Min Stock Threshold</label>
+                <input type="number" class="form-control tabular" id="modal-product-min-stock" min="0" value="10">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-product').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 6. Add User Modal -->
+    <div class="modal-backdrop" id="modal-user">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">Create User Account</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-user">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="req">*</span></label>
+              <input type="text" class="form-control" id="modal-user-name" placeholder="e.g. Suresh Kumar" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="req">*</span></label>
+              <input type="email" class="form-control" id="modal-user-email" placeholder="e.g. suresh@inv.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password <span class="req">*</span></label>
+              <input type="password" class="form-control" id="modal-user-password" placeholder="Min 6 characters" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">System Role <span class="req">*</span></label>
+              <select class="form-control" id="modal-user-role" required>
+                <option value="admin">Administrator (Global Access)</option>
+                <option value="manager">Warehouse Manager (Warehouse Scoped)</option>
+                <option value="staff">Warehouse Staff (Warehouse Scoped)</option>
+                <option value="supplier">Supplier Portal (Supplier Scoped)</option>
+              </select>
+            </div>
+            <div class="form-group" id="modal-user-warehouse-wrap">
+              <label class="form-label">Assigned Warehouse (Manager / Staff)</label>
+              <select class="form-control" id="modal-user-warehouse"></select>
+            </div>
+            <div class="form-group" id="modal-user-supplier-wrap">
+              <label class="form-label">Assigned Supplier (Supplier Role)</label>
+              <select class="form-control" id="modal-user-supplier"></select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-user').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 7. Authentication / Login Modal -->
+    <div class="modal-backdrop" id="modal-login">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">Sign In to NEXUS WMS</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <form id="form-login">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="login-email" value="admin@inv.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" id="login-password" value="Pass@123" required>
+            </div>
+            
+            <div class="preview-box">
+              <span class="preview-label">Quick Demo Accounts (Password: <code>Pass@123</code>):</span>
+              <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.4rem;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#login-email').value='admin@inv.com'; $('#form-login').requestSubmit();">Admin</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#login-email').value='ravi@inv.com'; $('#form-login').requestSubmit();">Ravi (Mgr)</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#login-email').value='priya@inv.com'; $('#form-login').requestSubmit();">Priya (Staff)</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#login-email').value='karthik@inv.com'; $('#form-login').requestSubmit();">Karthik (Mgr)</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#login-email').value='supplier@abc.com'; $('#form-login').requestSubmit();">ABC Supplier</button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="window.NEXUS.closeLoginModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Hub -->
+    <div class="toast-container" id="toast-container"></div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="./static/js/api.js"></script>
+  <script src="./static/js/app.js"></script>
+</body>
+</html>
